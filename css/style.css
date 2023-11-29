@@ -1,0 +1,68 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    transition: background-color 1s;
+}
+#content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 95%;
+}
+#quoteContainer {
+    /* width: 95%; */
+    position: relative;
+    display: inline-block;
+}
+#quote {
+    font-size: 24px;
+    text-align: center;
+    transition: color 1s;
+}
+#copyButton {
+    display: none;
+    position: absolute;
+    top: -40px;
+    right: 0;
+    width: 120px;
+    height: 30px;
+    margin: 10px;
+    text-align: center;
+    line-height: 30px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 1s, color 1s;
+}
+#quoteContainer:hover #copyButton {
+    display: block;
+}
+#button {
+    display: block;
+    width: 200px;
+    height: 50px;
+    margin: 20px auto;
+    text-align: center;
+    line-height: 50px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 1s, color 1s, transform 0.1s;
+}
+#button:active {
+    transform: scale(0.95);
+}
+#rodape {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #f8f8f8;
+}
