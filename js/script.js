@@ -10,41 +10,59 @@ var colors = [
 ];
 
 function newQuote() {
-    fetch('https://api.quotable.io/random')
+    fetch('https://type.fit/api/quotes')
         .then(response => response.json())
         .then(data => {
-            var quote = `${data.content} - ${data.author}`;
-            if (quote === lastQuote) {
-                newQuote();
-                return;
-            }
-            lastQuote = quote;
+            // Verifica se a resposta da API é um array e não está vazia
+            if (Array.isArray(data) && data.length > 0) {
+                // Seleciona um quote aleatório do array
+                const randomIndex = Math.floor(Math.random() * data.length);
+                const quote = data[randomIndex];
 
-            // Traduz a citação para o português usando a API MyMemory
-            fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(quote) + '&langpair=en|pt-br')
-                .then(response => response.json())
-                .then(data => {
-                    var translatedQuote = data.responseData.translatedText;
-                    document.getElementById('quote').textContent = translatedQuote;
-                })
-                .catch(error => {
-                    console.log('Error:', error);
-                });
+                // Acessa o texto (text) e o autor (author) do quote
+                const text = quote.text;
+                // Remove ", type.fit" do autor
+                const author = quote.author.replace(", type.fit", "").replace("type.fit", "");
 
-            var color = lastColor;
-            while (color === lastColor) {
-                color = colors[Math.floor(Math.random() * colors.length)];
+                // Cria a string formatada com texto e autor
+                const formattedQuote = author.length === 0 ? text : `${text} - ${author}`;
+                
+                // Se a citação é a mesma que a última, chama a função newQuote()
+                if (formattedQuote === lastQuote) {
+                    newQuote();
+                    return;
+                }
+                lastQuote = formattedQuote;
+
+                // Traduz a citação para o português usando a API MyMemory
+                fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(formattedQuote) + '&langpair=en|pt-br')
+                    .then(response => response.json())
+                    .then(data => {
+                        const translatedQuote = data.responseData.translatedText;
+                        document.getElementById('quote').textContent = translatedQuote;
+                    })
+                    .catch(error => {
+                        console.log('Error:', error);
+                    });
+
+                // Restante do seu código para alterar cores etc.
+                var color = lastColor;
+                while (color === lastColor) {
+                    color = colors[Math.floor(Math.random() * colors.length)];
+                }
+                lastColor = color;
+                document.body.style.backgroundColor = color.background;
+                document.getElementById('quote').style.color = color.text;
+                document.getElementById('button').style.backgroundColor = color.text;
+                document.getElementById('button').style.color = color.background;
+                document.getElementById('copyButton').style.backgroundColor = color.text;
+                document.getElementById('copyButton').style.color = color.background;
+            } else {
+                console.error('Resposta da API vazia ou em um formato inesperado.');
             }
-            lastColor = color;
-            document.body.style.backgroundColor = color.background;
-            document.getElementById('quote').style.color = color.text;
-            document.getElementById('button').style.backgroundColor = color.text;
-            document.getElementById('button').style.color = color.background;
-            document.getElementById('copyButton').style.backgroundColor = color.text;
-            document.getElementById('copyButton').style.color = color.background;
         })
         .catch(error => {
-            console.log('Error:', error);
+            console.error('Erro ao acessar a API:', error);
         });
 }
 
